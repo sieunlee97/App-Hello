@@ -11,7 +11,7 @@
 - 로그인했을 때(현재 화면(로그인화면)을 벗어날때): onPause(일시정지) -> onStop(정지)
 - 로그인 후 뒤로가기 했을 때: onStart(시작) -> onResume(실행)
 - 로그아웃했을때: onCreate(생성) -> onStart(시작) -> onResume(실행)
-- 
+
 - 로그인 후, 아이디 값과 암호 값 가져가기
 - <b>LoginActivity.java</b>
 
