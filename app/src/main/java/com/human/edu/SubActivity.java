@@ -1,9 +1,13 @@
 package com.human.edu;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,16 +48,48 @@ public class SubActivity extends AppCompatActivity {
                 MemberVO memberVO = (MemberVO) mItemList.get(position);
                 currentCursorId = memberVO.getUser_id();
                 //Toast.makeText(getApplicationContext(), "현재 선택한 회원 ID는 "+ currentCursorId, Toast.LENGTH_LONG).show();
-                deleteUserData(currentCursorId);
+                deleteUserData(position, currentCursorId);
             }
         });
     }
 
     //RestAPI 서버로 UserId를 전송해서 스프링앱의 사용자를 삭제하는 메서드
-    private void deleteUserData(String currentCursorId) {
+    private void deleteUserData(int position, String currentCursorId) {
         //삭제 대화상자에 보여줄 메세지 생성
         String message = "해당 회원을 삭제하시겠습니까?<br />"+
-                "";
+                "position : "+position+"<br />"+
+                "회원ID : "+currentCursorId+"<br />";
+        DialogInterface.OnClickListener deleteListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String requestUrl = "http://192.168.56.1:8080/android/delete/"+currentCursorId;
+                PostResponseAsyncTask deleteTask = new PostResponseAsyncTask(SubActivity.this, new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+                        if(output.equals("success")){
+                            Toast.makeText(SubActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
+                            getAllData();
+                        }else{
+                            Toast.makeText(SubActivity.this, "삭제 실패", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                deleteTask.execute(requestUrl);
+            }
+        };
+        //삭제를 물어보는 dialog 생성
+        new AlertDialog.Builder(this).setTitle("선택한 회원을 삭제")
+            .setMessage(Html.fromHtml(message))
+            .setPositiveButton("삭제", deleteListener)
+            .setNegativeButton("취소",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss(); //취소버튼을 눌렀을 때 화면에서 지우기
+                        }
+                    }
+        ).show();
+
     }
 
     //RestAPI 서버에서 전송받은 데이터를 리사이클러뷰에 바인딩시킴

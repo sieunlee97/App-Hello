@@ -13,7 +13,7 @@ import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
     public interface OnItemClickListener {
-        void onItemClick(View v, int position);
+        void onItemClick(View v, int position); //인터페이스. 메서드 명세
     }
     //멤버변수
     public OnItemClickListener mOnItemClickListener;
