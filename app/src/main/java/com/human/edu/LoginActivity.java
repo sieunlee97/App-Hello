@@ -69,6 +69,8 @@ public class LoginActivity extends AppCompatActivity {
                         if(!jsonString.equals("{}")){ // 로그인 사용자 정보가 있으면
                             Log.i("디버그", jsonString);
                             //로그인 이후 액티비티를 여기서 띄우기
+                            Intent intent = new Intent(LoginActivity.this, SubActivity.class);
+                            startActivity(intent);
                         }else{
                             Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_LONG).show();
                         }
