@@ -1,7 +1,20 @@
 # 안드로이드 앱 만들기
-#### 안드로이드 스튜디오 툴 익히며, AVD 모듈로 확인해보기 실습
+### HelloApp To Spring - 스프링 RestAPI와 안드로이드앱 비동기 통신 실습
+#### PREVIEW
+<p>
+스프링 프로젝트에 가입되어있는 admin/user02로 로그인 시, 회원 목록 출력 <br>
+선택한 회원 삭제 기능 + 회원 목록 클릭 시 메일 보내기 기능
+</p>
+<div>
+<img align="left" width="20%;" src="https://user-images.githubusercontent.com/63999784/114891445-dbf38100-9e46-11eb-8ded-1f3c2067f351.png">
+<img align="left" width="20%;" src="https://user-images.githubusercontent.com/63999784/114891522-ed3c8d80-9e46-11eb-8b8f-cd4473406a73.png">
+<img align="left" width="20%;" src="https://user-images.githubusercontent.com/63999784/114891595-fa597c80-9e46-11eb-9233-3c5518b3d4f2.png">
+<img width="20%;" src="https://user-images.githubusercontent.com/63999784/114891999-56bc9c00-9e47-11eb-9378-a22ba3134570.png">
+</div>
+<hr>
 
-### PREVIEW
+### 안드로이드 스튜디오 툴 익히며, AVD 모듈로 확인해보기 실습
+#### PREVIEW
 <img align="left" width="40%;" src="https://user-images.githubusercontent.com/63999784/110773931-9d473580-82a0-11eb-9778-2fb732bbba15.PNG"> 
 <img width="40%;" src="https://user-images.githubusercontent.com/63999784/110773967-a3d5ad00-82a0-11eb-9ed1-9a4b5e7cfdb8.PNG">
 
