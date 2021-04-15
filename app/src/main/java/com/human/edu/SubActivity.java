@@ -1,9 +1,9 @@
 package com.human.edu;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,23 +25,36 @@ import core.PostResponseAsyncTask;
  * List 객체(Json데이터바인딩)-어댑터클래스(데이터와 뷰객체 중간)-리사이클러뷰
  */
 public class SubActivity extends AppCompatActivity {
-    //리사이클러뷰를 사용할 멤버변수(필드변수) 생성
+    //리사이클러뷰를 사용할 멤버변수(필드변수) 생성 2개
     private RecyclerAdapter mRecyclerAdapter;
+    private RecyclerAdapter mRecyclerAdapter2;
     private List mItemList = new ArrayList<MemberVO>();
+
+    //리사이클러 레이아웃 뷰 멤버변수 생성
+    RecyclerView recyclerView;
+    RecyclerView recyclerView2;
     //어댑터에서 선택한 값 확인 변수(선택한 회원을 삭제하기 위함)
     private String currentCursorId = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
-        //객체 생성
+        //객체 생성 2개
         mRecyclerAdapter = new RecyclerAdapter(mItemList);
+        mRecyclerAdapter2 = new RecyclerAdapter(mItemList);
         //리사이클러뷰 xml과 어댑터클래스 바인딩
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mRecyclerAdapter); //데이터 없는 빈 어댑터를 뷰화면에 바인딩시킴
-        getAllData();
+        //리사이클러뷰 xml2와 어댑터클래스 바인딩
+        recyclerView2 = findViewById(R.id.recyclerView2);
+        recyclerView2.setHasFixedSize(true);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView2.setAdapter(mRecyclerAdapter2);
+
+        getAllData(); //1개의 메서드로 2개의 어댑터를 갱신한다.
+        //선택한 회원 삭제하기
         mRecyclerAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
@@ -49,6 +62,23 @@ public class SubActivity extends AppCompatActivity {
                 currentCursorId = memberVO.getUser_id();
                 //Toast.makeText(getApplicationContext(), "현재 선택한 회원 ID는 "+ currentCursorId, Toast.LENGTH_LONG).show();
                 deleteUserData(position, currentCursorId);
+            }
+        });
+        //선택한 회원 메일 보내기
+        mRecyclerAdapter2.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                MemberVO memberVO = (MemberVO) mItemList.get(position);
+                String userEmail = memberVO.getEmail();
+                String userName = memberVO.getUser_name();
+                Intent mailIntent = new Intent(Intent.ACTION_SEND);
+                mailIntent.setType("plain/text");
+                String[] address = {userEmail};
+                //put은 해시데이터에 값을 입력할 때 사용
+                mailIntent.putExtra(Intent.EXTRA_EMAIL, address);
+                mailIntent.putExtra(Intent.EXTRA_SUBJECT, "[사이트 공지사항]");
+                mailIntent.putExtra(Intent.EXTRA_TEXT, userName+"님 안녕하세요!");
+                startActivity(mailIntent);
             }
         });
     }
@@ -102,7 +132,7 @@ public class SubActivity extends AppCompatActivity {
         PostResponseAsyncTask readTask = new PostResponseAsyncTask(SubActivity.this, postDataParams, new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                Log.i("RestAPI 텍스트 : ", output);
+                //Log.i("RestAPI 텍스트 : ", output);
                 ArrayList<MemberVO> memberList = new JsonConverter<MemberVO>().toArrayList(output, MemberVO.class);
                 //위  컨버트한 memberList변수를 어댑터에 바인딩 시키기(아래)
                 for(MemberVO value : memberList){
@@ -116,6 +146,7 @@ public class SubActivity extends AppCompatActivity {
                 mItemList.clear();
                 mItemList.addAll(resultList);
                 mRecyclerAdapter.notifyDataSetChanged();//어댑터 객체가 리프레시 됨
+                mRecyclerAdapter2.notifyDataSetChanged();//데이터변경사항을 공지
 
             }
         });

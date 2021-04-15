@@ -65,25 +65,32 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void processFinish(String output) { // output = 스프링앱에서 반환받은 로그인 사용자 정보
                         Toast.makeText(LoginActivity.this, output+"디버그", Toast.LENGTH_SHORT).show();
-                        String jsonString = output.substring(output.indexOf('{'), output.indexOf('}'));
-                        if(!jsonString.equals("{}")){ // 로그인 사용자 정보가 있으면
-                            Log.i("디버그", jsonString);
-                            //로그인 이후 액티비티를 여기서 띄우기
-                            Intent intent = new Intent(LoginActivity.this, SubActivity.class);
-                            startActivity(intent);
+                        String jsonString = "";
+                        if(!output.equals("")){
+                            jsonString = output.substring(output.indexOf('{'), output.indexOf('}'));
+                            if(!jsonString.equals("{}")){ // 로그인 사용자 정보가 있으면
+                                Log.i("디버그", jsonString);
+                                //로그인 이후 액티비티를 여기서 띄우기
+                                Intent intent = new Intent(LoginActivity.this, SubActivity.class);
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_LONG).show();
+                            }
                         }else{
-                            Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "RestAPI 서버가 작동하지 않습니다.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
                 readTask.execute(requestUrl); // 1번 작업 (백그라운드 호출)
                 
                 // Intent는 안드로이드앱에서 액티비티 간 데이터를 전송하는 클래스
+                /*
                 Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                 mainIntent.putExtra("editTextID", editTextID.getText().toString()); //아이디
                 mainIntent.putExtra("editTextPassword", editTextPassword.getText().toString()); //암호
                 startActivity(mainIntent);
                 Toast.makeText(LoginActivity.this, "onCreate상태1", Toast.LENGTH_LONG).show();
+                 */
             }
         });
 
